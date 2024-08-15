@@ -5,7 +5,7 @@
     Nicolas Sebastian Perez Trujillo
     Sistemas Operativos
     Codigo 01
-    Fecha: 01/08/2024
+    Fecha: 25/08/2024
 */
 
 int main() {
