@@ -1,3 +1,13 @@
+/**************************************
+
+  Pontificia Universidad Javeriana 
+  Tema: Máquina Virtual
+  Tópico: Posix
+  Autor: Nicolás S. Pérez
+  Materia: Sistemas Operativos
+  
+**************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
