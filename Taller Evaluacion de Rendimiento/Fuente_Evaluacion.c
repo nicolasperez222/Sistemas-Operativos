@@ -1,7 +1,7 @@
 /**************************************************************
 		Pontificia Universidad Javeriana
-	Autor: J. Corredor
-	Fecha: Febrero 2024
+	Autor: Pérez N
+	Fecha: Noviembre 2024
 	Materia: Sistemas Operativos
 	Tema: Taller de Evaluación de Rendimiento
 	Fichero: fuente de multiplicación de matrices NxN por hilos.
@@ -23,6 +23,12 @@ pthread_mutex_t MM_mutex;
 static double MEM_CHUNK[DATA_SIZE];
 double *mA, *mB, *mC;
 
+/**
+ * Estructura que almacena los parámetros para cada hilo:
+ * - nH: Número total de hilos.
+ * - idH: Identificador del hilo actual.
+ * - N: Tamaño de las matrices (dimensión NxN).
+ */
 struct parametros{
 	int nH;
 	int idH;
@@ -31,6 +37,14 @@ struct parametros{
 
 struct timeval start, stop;
 
+/**
+ * Función para llenar las matrices mA y mB con valores específicos.
+ * La matriz mA se llena con valores incrementales multiplicados por 1.1,
+ * y mB con valores incrementales multiplicados por 2.2. 
+ * La matriz mC se inicializa en 0.
+ * 
+ * @param SZ Tamaño de la matriz (NxN).
+ */
 void llenar_matriz(int SZ){ 
 	srand48(time(NULL));
 	for(int i = 0; i < SZ*SZ; i++){
@@ -40,6 +54,13 @@ void llenar_matriz(int SZ){
 		}	
 }
 
+/**
+ * Función para imprimir una matriz en la consola. Si el tamaño de la matriz
+ * es menor que 12x12, imprime el contenido en formato matricial.
+ * 
+ * @param sz Tamaño de la matriz.
+ * @param matriz Puntero a la matriz que se quiere imprimir.
+ */
 void print_matrix(int sz, double *matriz){
 	if(sz < 12){
     		for(int i = 0; i < sz*sz; i++){
@@ -50,16 +71,33 @@ void print_matrix(int sz, double *matriz){
     printf("\n>-------------------->\n");
 }
 
+/**
+ * Función para iniciar la medición de tiempo.
+ * Utiliza `gettimeofday` para obtener el tiempo actual y almacenarlo en la variable global `start`.
+ */
 void inicial_tiempo(){
 	gettimeofday(&start, NULL);
 }
 
+/**
+ * Función para finalizar la medición de tiempo.
+ * Calcula el tiempo transcurrido en microsegundos desde la ejecución de `inicial_tiempo` 
+ * y lo imprime en la consola.
+ */
 void final_tiempo(){
 	gettimeofday(&stop, NULL);
 	stop.tv_sec -= start.tv_sec;
 	printf("\n:-> %9.0f µs\n", (double) (stop.tv_sec*1000000 + stop.tv_usec));
 }
 
+/**
+ * Función ejecutada por cada hilo para realizar la multiplicación de matrices.
+ * Cada hilo calcula una parte de la matriz resultado mC, utilizando los índices 
+ * adecuados basados en el identificador del hilo.
+ * 
+ * @param variables Puntero a una estructura que contiene los parámetros necesarios 
+ * para la multiplicación (nH, idH, N).
+ */
 void *mult_thread(void *variables){
 	struct parametros *data = (struct parametros *)variables;
 	
@@ -86,6 +124,21 @@ void *mult_thread(void *variables){
 	pthread_exit(NULL);
 }
 
+/**
+ * Función principal que gestiona la ejecución del programa. 
+ * Realiza las siguientes acciones:
+ * - Procesa los argumentos de entrada.
+ * - Inicializa las matrices mA, mB y mC.
+ * - Inicia la medición de tiempo.
+ * - Crea los hilos para realizar la multiplicación de matrices.
+ * - Espera que todos los hilos finalicen su ejecución.
+ * - Mide el tiempo total de ejecución y muestra el resultado.
+ * - Imprime la matriz resultado mC.
+ * 
+ * @param argc Número de argumentos.
+ * @param argv Arreglo con los argumentos de entrada.
+ * @return Código de salida del programa.
+ */
 int main(int argc, char *argv[]){
 	if (argc < 2){
 		printf("Ingreso de argumentos \n $./ejecutable tamMatriz numHilos\n");
