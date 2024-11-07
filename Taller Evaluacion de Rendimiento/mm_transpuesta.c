@@ -1,7 +1,7 @@
 /**************************************************************
 		Pontificia Universidad Javeriana
-	Autor: J. Corredor
-	Fecha: Febrero 2024
+	Autor: Pérez N
+	Fecha: Noviembre 2024
 	Materia: Sistemas Operativos
 	Tema: Taller de Evaluación de Rendimiento
 	Fichero: fuente de multiplicación de matrices NxN por hilos.
